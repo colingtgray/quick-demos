@@ -119,7 +119,7 @@
       stack_name: "{{ stack_name }}"
     register: my_stack
 
-  - name: Wait for SSH access - Minimum 60 seconds
+  - name: WAIT FOR SSH ACCESS - CHECK EVERY 10 (MAX 600)
     wait_for:
       host: "{{ item }}"
       port: 22
@@ -131,18 +131,15 @@
     loop:
       - "{{ my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.Bigip1ManagementEipAddress }}"
 
-  - name: WAIT FOR 180 SECONDS BEFORE CHANGE PASSWORD
-    wait_for:
-      timeout: 180
 
-
-  - name: SSH TO BIG-IPS AND ENABLE PASSWORD AUTH
+  - name: CHECK FOR READY SIGNAL FILE - CHECK EVERY 10 (MAX 600)
     bigip_command:
       commands:
-        - modify auth user "{{ bigip_user }}" password "{{ bigip_pass }}" 
-        - save sys config
+        - "run /util bash -c 'test -f /tmp/f5-cloud-libs-signals/ADMIN_CREATED && echo ADMIN_CREATED'"
       wait_for:
-        - result[1] contains done
+        - result contains ADMIN_CREATED
+      interval: 10
+      retries: 60
       provider:
         server: "{{ item }}"
         user: "{{ bigip_user }}"
@@ -156,6 +153,28 @@
       - "{{ my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.Bigip1ManagementEipAddress }}"
     until: ssh_output is not failed
     retries: 5
+
+
+  - name: SSH TO BIG-IPS AND ENABLE PASSWORD AUTH
+    bigip_command:
+      commands:
+        - modify auth user "{{ bigip_user }}" password "{{ bigip_pass }}" 
+        - save sys config
+      wait_for:
+        - result[1] contains done
+      retries: 5
+      provider:
+        server: "{{ item }}"
+        user: "{{ bigip_user }}"
+        password: "{{ bigip_pass }}"
+        transport: cli
+        ssh_keyfile: "{{ ssh_key_file_path }}"
+        validate_certs: no
+    register: ssh_output_2
+    delegate_to: localhost
+    loop:
+      - "{{ my_stack.ansible_facts.cloudformation[stack_name].stack_outputs.Bigip1ManagementEipAddress }}"
+    until: ssh_output_2 is not failed
 
 
   - name: BIG-IP LOGIN READY - "{{ aws_region }}"

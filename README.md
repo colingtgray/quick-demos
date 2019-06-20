@@ -28,6 +28,7 @@ DO NOT put credentials in any file of folder contained in this repo!
 
 ## Configuration Notes
 
+These playbooks require Ansible 2.8.1.
 
 If you have ansible installed, you can run the playbooks with: 
  

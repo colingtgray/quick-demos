@@ -22,7 +22,7 @@
   #  ec2_secret_key: "--your-secret-here--"
   #
   vars_files:
-    - ../../creds/aws_creds.yaml
+    - ../../../creds/aws_creds.yaml
     - ./vars.yaml
   
 #------------------------------------------------------------------------------
@@ -35,15 +35,31 @@
 
   tasks:
 
+# Use/uncomment the loop control below to create single devices in multiple regions.
+#
+#  - include_tasks: aws-delete-tasks.yaml
+#    loop:
+#        - eu-west-1
+#        - eu-west-2
+#        - eu-central-1
+#        - us-east-1
+#        - us-east-2
+#        - us-west-2
+#        
+#    loop_control:
+#      loop_var: aws_region
+
+
+# Use/uncomment the loop control below to create single devices in same region.
+#
   - include_tasks: aws-delete-tasks.yaml
     loop:
-        - eu-west-1
-        - eu-west-2
-        - eu-west-3
-        - us-east-1
-        - us-east-2
+        - autowsStack1
+        - autowsStack2
+        - autowsStack3
+        - autowsStack4
     loop_control:
-      loop_var: aws_region
+      loop_var: stack_name
 
 #------------------------------------------------------------------------------
 # End tasks
