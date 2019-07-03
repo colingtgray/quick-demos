@@ -72,10 +72,6 @@
       virtual_network_name: "{{ vnet_name }}"
       resource_group: "{{ rg_name }}"
       address_prefix_cidr: "{{ item.cidr }}"
-      tags:
-        automated: "{{ automation_tool }}"
-        stack: "{{ stack_name }}"
-        UK-SE: "{{ uk_se_name }}"
     with_items: "{{ vnet_subnets }}"
     register: create_vnet_subnets
 

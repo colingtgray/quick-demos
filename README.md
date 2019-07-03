@@ -15,9 +15,9 @@
  What these playbooks don't provide (yet):
 
  - Any test application server (I plan to automate a microservices app)
- - AS3 configuration to create a virtual server and pool
+ - AS3 configuration to create a virtual server and pool (in progress with peering playbook)
  - Automated TLS certs/keys
- - F5 Cloud Services GSLBaaS
+ - F5 Cloud Services GSLBaaS (in progress with peering gslb playbook)
  - F5 Silverline WAFaaS
 
 
