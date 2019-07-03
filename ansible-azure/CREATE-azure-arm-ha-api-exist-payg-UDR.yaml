@@ -93,11 +93,11 @@
         servicePrincipalSecret:
           value: "{{ az_secret }}"
         adminUsername:
-          value: "{{ bigip_user }}"
+          value: "{{ f5_azure_user }}"
         authenticationType:
           value: password
         adminPasswordOrKey:
-          value: "{{ bigip_pass }}"
+          value: "{{ f5_azure_pass }}"
         dnsLabel:
           value: arch-f5
         instanceName:
@@ -155,8 +155,16 @@
         allowUsageAnalytics:
           value: 'Yes'
         #declarationUrl:  "NOT_SPECIFIED"
+    # There is a known issue related to addtlnic, which can't be resolved by F5 ARM PD.
+    # We ignore the error, and the BIG-IPs deploy correctly.
     ignore_errors: True
-    
+
+
+  - name: OUTPUT WARNING ABOUT KNOW ISSUE WITH ADDTLNIC
+    debug:
+      msg: "The previous error referring to missing addtlnic is cosmetic.  F5 ARM templates need to use dependsOn for conditional resources, so unable to work-around the issue.  We can safely igmore and the BIG-IP devices deploy correctly."
+
+
 #------------------------------------------------------------------------------
 # TS Curl
 #------------------------------------------------------------------------------
