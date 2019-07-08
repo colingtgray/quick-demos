@@ -22,7 +22,7 @@
     cloudformation:
       stack_name: "{{ stack_name }}"
       state: absent
-      region: "{{ aws_region }}"
+      region: "{{ aws_region.region }}"
       disable_rollback: true
       tags:
         automated: "{{ automation_tool }}"
@@ -33,7 +33,7 @@
 
   - name: GET VPC ID USING TAGS DEFINED DURING AUTOMATED BUILD
     ec2_vpc_net_facts:
-      region: "{{ aws_region }}"
+      region: "{{ aws_region.region }}"
       filters:
         "tag:stack": "{{ stack_name }}"
         "tag:UK-SE": "{{ uk_se_name }}"
@@ -56,7 +56,7 @@
 
   - name: GET PEERING ID USING TAGS DEFINED DURING AUTOMATED BUILD
     ec2_vpc_peering_facts:
-      region: "{{ aws_region }}"
+      region: "{{ aws_region.region }}"
       filters:
         "tag:stack": "{{ stack_name }}"
         "tag:UK-SE": "{{ uk_se_name }}"
@@ -67,7 +67,7 @@
 
   - name: DELETE LOCAL PEERING CONNECTION
     ec2_vpc_peer:
-      region: "{{ aws_region }}"
+      region: "{{ aws_region.region }}"
       peering_id: "{{ item.vpc_peering_connection_id }}"
       state: absent
     ignore_errors: True
@@ -98,7 +98,7 @@
       name: "{{ vpc_name }}" 
       state: absent
       cidr_block: "{{ vpc_cidr }}"
-      region: "{{ aws_region }}"
+      region: "{{ aws_region.region }}"
     ignore_errors: True
 
 #------------------------------------------------------------------------------

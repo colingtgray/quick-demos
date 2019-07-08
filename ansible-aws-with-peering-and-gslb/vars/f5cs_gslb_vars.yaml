@@ -13,6 +13,7 @@
 #
 
 gslb_zone: "archf5.uk"
+gslb_zone_a_record: "arcadia"
 gslb_service_name: "arch arcadia finance demo"
 gslb_service_name_short: "arch_arcadia_demo"
 

@@ -10,8 +10,7 @@
             "load_balanced_records": {
                 "lbr1": {
                     "aliases": [
-                        "www1",
-                        "www"
+                        "{{ gslb_zone_a_record }}"
                     ],
                     "display_name": "{{ gslb_service_name }} records",
                     "enable": true,
@@ -21,12 +20,10 @@
                     "persistence_ttl": 3600,
                     "proximity_rules": [
                         {
-                            "pool": "{{ gslb_service_name_short }}_pool",
-                            "region": "regions_Everywhere",
-                            "score": 50
-                        }
-                    ],
-                    "proximity_rules": [
+                            "pool": "{{ gslb_service_name_short }}_fallback_pool",
+                            "region": "global",
+                            "score": 10
+                        },
                         {
                             "pool": "{{ gslb_service_name_short }}_uk_pool",
                             "region": "uk_region",
@@ -34,7 +31,7 @@
                         },
                         {
                             "pool": "{{ gslb_service_name_short }}_us_pool",
-                            "region": "global",
+                            "region": "us_region",
                             "score": 50
                         }
                     ],
@@ -51,7 +48,7 @@
                     "members": [
                         {
                             "virtual_server": "{{ gslb_service_name_short }}_vs_region_eu_west2",
-                            "monitor": "basic",
+                            "monitor": "tcp_monitor",
                             "ratio": 80
                         }
                     ]
@@ -65,37 +62,48 @@
                     "members": [
                         {
                             "virtual_server": "{{ gslb_service_name_short }}_vs_region_us_east1",
-                            "monitor": "basic",
+                            "monitor": "tcp_monitor",
                             "ratio": 80
                         }
                     ]
-                }
+                },
+                "{{ gslb_service_name_short }}_fallback_pool": {
+                            "display_name": "arch_arcadia_demo_fallback",
+                            "enable": true,
+                            "load_balancing_mode": "static-persist",
+                            "max_answers": 1,
+                            "members": [
+                                {
+                                    "monitor": "tcp_monitor",
+                                    "virtual_server": "arch_arcadia_demo_vs_region_eu_west2"
+                                },
+                                {
+                                    "monitor": "tcp_monitor",
+                                    "virtual_server": "arch_arcadia_demo_vs_region_us_east1"
+                                }
+                            ],
+                            "rr_type": "A",
+                            "ttl": 30
+                        }
             },
             "virtual_servers": {
                 "{{ gslb_service_name_short }}_vs_region_eu_west2": {
                     "port": 80,
-                    "monitor": "amonitor",
+                    "monitor": "none",
                     "address_family": "ipv4",
                     "address": "{{ gslb_ips.0 | urlsplit('hostname') }}"
                 },
                 "{{ gslb_service_name_short }}_vs_region_us_east1": {
                     "port": 80,
-                    "monitor": "bmonitor",
+                    "monitor": "none",
                     "address_family": "ipv4",
                     "address": "{{ gslb_ips.1 | urlsplit('hostname') }}"
                 }
             },
             "monitors": {
-                "amonitor": {
-                    "monitor_type": "http",
-                    "send": "GET / HTTP/1.0\\r\\n\\r\\n",
-                    "receive": "HTTP/1.",
-                    "target_port": 80
-                },
-                "bmonitor": {
-                    "monitor_type": "http",
-                    "send": "GET / HTTP/1.0\\r\\n\\r\\n",
-                    "receive": "HTTP/1.",
+                "tcp_monitor": {
+                    "display_name": "tcp_monitor",
+                    "monitor_type": "tcp",
                     "target_port": 80
                 }
             },
@@ -106,6 +114,15 @@
                         {
                             "scale": "country",
                             "code": "GB"
+                        }
+                    ]
+                },
+                "us_region": {
+                    "display_name": "us",
+                    "sectors": [
+                        {
+                            "scale": "country",
+                            "code": "US"
                         }
                     ]
                 }

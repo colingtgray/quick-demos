@@ -33,11 +33,6 @@
   delay: 30
 
 
-- name: OUTPUT GSLB IPS
-  debug:
-    msg: "GSLB IP 1: {{ gslb_ips.0 | urlsplit('hostname') }}, GSLB IP 2: {{ gslb_ips.1 | urlsplit('hostname') }}"
-
-
 - name: REST CALL TO F5 CLOUD SERVICES TO DEPLOY GSLB
   uri:
     url: https://api.cloudservices.f5.com/v1/svc-subscription/subscriptions
@@ -71,6 +66,10 @@
   retries: 5
   delay: 30
 
+
+- name: OUTPUT GSLB IPS
+  debug:
+    msg: "GSLB IP 1: {{ gslb_ips.0 }}, GSLB IP 2: {{ gslb_ips.1 }}, you can dig {{ gslb_zone_a_record }}.{{ gslb_zone }} @ns91.dns.cloudservices.f5.com to test"
 
 #------------------------------------------------------------------------------
 # End tasks
