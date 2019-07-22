@@ -58,6 +58,14 @@ callback_whitelist = profile_tasks, timer
 
 The last line above adds timing information to your playbook, which improves a demo - and it works for any Ansible playbook, not just AWS.
 
+The AWS Ansible modules require the following Python packages to be installed ([sudo]pip install <package name>):
+
+ - boto
+ - boto3
+ - nose
+ - tornado
+
+
 ### Azure Configuration Notes
 
 In order to configure API access to your Azure account you will need to do the following:
