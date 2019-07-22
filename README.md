@@ -60,6 +60,8 @@ The last line above adds timing information to your playbook, which improves a d
 
 The AWS Ansible modules require the following Python packages to be installed ([sudo]pip install <package name>):
 
+ - python >= 2.6
+ - botocore >= 1.5.45
  - boto
  - boto3
  - nose
