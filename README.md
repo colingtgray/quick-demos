@@ -10,7 +10,8 @@
  - Routing
  - A pair of BIG-IPs deployed with 2 NICs in HA 
 
- In AWS, the playbook will login to the deployed BIG-IPs and change/enable password authentication.  In Azure, passwords are enabled by default.
+ In *AWS*, the playbook will login to the deployed BIG-IPs and change/enable password authentication.  
+ In *Azure*, passwords are enabled by default.
 
  What these playbooks don't provide (yet):
 
@@ -34,9 +35,13 @@ If you have ansible installed, you can run the playbooks with:
  
  ```ansible-playbook playbook-name```
 
+ or if using valut:
+
+  ```ansible-playbook playbook-name --ask-vault-pass```
+
  e.g. 
 
-```ansible-playbook CREATE-azure-arm-ha-api-exist-payg-UDR.yaml```
+```ansible-playbook CREATE-azure-arm-ha-api-exist-payg-UDR.yaml --ask-vault-pass```
 
 
 There are instructions contained within each playbook, and within the vars files.  The instructions in the playbook tell you how to declare your credentials.
