@@ -19,17 +19,6 @@
 # Load Variables from files 
 #------------------------------------------------------------------------------
 
-  # You need to create a file named azure_creds.yaml (update path below) with the following variables:
-  #
-  # az_subs_id: "--your-id-here--"
-  # az_client_id: "--your-id-here--"
-  # az_secret: "--your-secret-here--"
-  # az_tenant: "--your-tenant-here--"
-
-  # and a file named big_creds.yaml (update path below) with variables:
-  #
-  # bigip_user: "--your-user-here--"
-  # bigip_pass: "--your-password-here--"
 
   vars_files:
     - ../../creds/azure_creds.yaml
@@ -93,11 +82,11 @@
         servicePrincipalSecret:
           value: "{{ az_secret }}"
         adminUsername:
-          value: "{{ f5_azure_user }}"
+          value: "{{ bigip_azure_user }}"
         authenticationType:
           value: password
         adminPasswordOrKey:
-          value: "{{ f5_azure_pass }}"
+          value: "{{ bigip_azure_pass }}"
         dnsLabel:
           value: arch-f5
         instanceName:

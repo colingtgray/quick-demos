@@ -18,20 +18,7 @@
 # Load Variables from files 
 #------------------------------------------------------------------------------
   
-  # You need to create a file named aws_creds.yaml (update path below) with the 
-  # following variables:
-  #
-  #  ec2_access_key: "--your-key-here--"
-  #  ec2_secret_key: "--your-secret-here--"
-  #
-  # and a file named big_creds.yaml (update path below) with variables:
-  #
-  # bigip_user: "--your-user-here--"
-  # bigip_pass: "--your-password-here--"
-  #
-  # IMPORTANT!!  Make sure your creds file is not in ANY of your git repo folders
-  #
-
+  
   vars_files:
     - ../../creds/aws_creds.yaml
     - ../../creds/big_creds.yaml

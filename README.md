@@ -16,18 +16,13 @@
  What these playbooks don't provide (yet):
 
  - Any test application server (I plan to automate a microservices app)
- - AS3 configuration to create a virtual server and pool (in progress with peering playbook)
+ - AS3 configuration to create a virtual server and pool (works in my ansible-aws-with-peering-and-gslb playbook)
  - Automated TLS certs/keys
- - F5 Cloud Services GSLBaaS (in progress with peering gslb playbook)
+ - F5 Cloud Services GSLBaaS (works in my ansible-aws-with-peering-and-gslb playbook playbook)
  - F5 Silverline WAFaaS
 
 
-## IMPORTANT!
-
-DO NOT put credentials in any file of folder contained in this repo!
-
-
-## Configuration Notes
+## How to run...
 
 These playbooks require Ansible 2.8.1.
 
@@ -43,27 +38,10 @@ If you have ansible installed, you can run the playbooks with:
 
 ```ansible-playbook CREATE-azure-arm-ha-api-exist-payg-UDR.yaml --ask-vault-pass```
 
+## Prerequisites
 
-There are instructions contained within each playbook, and within the vars files.  The instructions in the playbook tell you how to declare your credentials.
 
-
-### AWS Configuration Notes
-
-To allow Ansible to SSH to BIG-IPs in AWS (to change initial password and enable password authentication), you might need to disable host_key_checking in the Ansible config file:
-
- - create /etc/ansible directory if it doesn't exist.
- - create /etc/ansible/ansible.cfg if it doesn't exist and add the following four lines (substituting <key file name> with your key file):
-
-```
-[defaults]
-private_key_file = <key file name>
-host_key_checking = False
-callback_whitelist = profile_tasks, timer
-```
-
-The last line above adds timing information to your playbook, which improves a demo - and it works for any Ansible playbook, not just AWS.
-
-The AWS Ansible modules require the following Python packages to be installed ([sudo]pip install <package name>):
+The AWS & Azure Ansible modules require the following Python packages to be installed ([sudo]pip install <package name>):
 
  - python >= 2.6
  - botocore >= 1.5.45
@@ -71,6 +49,64 @@ The AWS Ansible modules require the following Python packages to be installed ([
  - boto3
  - nose
  - tornado
+ - paramiko
+ - f5-sdk
+ - azure
+
+
+To allow Ansible to SSH to hosts (especially for BIG-IPs in AWS, in order to change initial password and enable password authentication), you will need an SSH key pair... and you might need to disable host_key_checking in the Ansible config file:
+
+ - create an SSH key pair in PEM format (or use your existing key pair e.g. ~/.ssh/id_rsa[.pub])
+ - create ansible.cfg (if it doesn't exist) and add the following four lines (substituting <key file name> with your key file):
+
+```
+[defaults]
+private_key_file = <key file name>
+host_key_checking = False
+callback_whitelist = profile_tasks, timer
+```
+The last line above adds timing information to your playbook, which improves a demo.
+
+ - You can place the ansible.cfg file in the same directory as your playbook, thus providing playbook specific settings, or you can place it in the /etc/ansible/ folder, which provides global settings..
+
+### AWS Configuration Notes
+
+
+In AWS you will need to create an IAM for programmatic access (or if you don't have permissions, get someone to create one for you).  The IAM will provide you with an EC2 Access Key and Secret Key.  You will need to place these in a variables file named aws_creds.yaml (and update path in the 'vars_files' section of the playbooks) with the following variables:
+
+```
+ec2_access_key: "<--your-key-here-->"
+ec2_secret_key: "<--your-secret-here-->"
+```
+
+You will also need a file named big_creds.yaml (and update path in the 'vars_files' section of the playbooks) with the following variables:
+
+```
+bigip_user: "--your-username-here--"
+bigip_pass: "--your-password-here--"
+```
+
+### IMPORTANT!!  
+Make sure your creds files are not in ANY of your git repo folders
+In my example, I have the following directory structure.  You can see that the creds file resides outside of my git repo (the values are also encrypted with ansible vault):
+
+```bash
+Root
+├── creds
+│   ├── aws_creds.yaml
+│   ├── azure_creds.yaml
+│   └── big_creds.yaml
+└── quick-demos
+    ├── README.md
+    ├── ansible-aws
+    │   ├── CREATE-failover-samenet-api-exist-payg.yaml
+    │   ├── DELETE-failover-samenet-api-exist-payg.yaml
+    │   └── vars.yaml
+    └── ansible-azure
+        ├── CREATE-azure-arm-ha-api-exist-payg-UDR.yaml
+        ├── DELETE-azure-arm-ha-api-exist-payg-UDR.yaml
+        └── vars.yaml
+```
 
 
 ### Azure Configuration Notes
@@ -87,3 +123,19 @@ In order to configure API access to your Azure account you will need to do the f
  - if you type 'subscriptions' into the search box at the top of the Azure Portal, you can find your Subscription ID:
   - the 'Subscription ID' is your "{{ az_subs_id }}"
 - within your subscription, go to 'Access Control (IAM)' and 'Role Assignments'.  Add a Role Assignment and give your 'App' the 'Contributor Role'. 
+
+You will need the details gathered above to populate a variables file. Create a file named azure_creds.yaml (and update path in the 'vars_files' section of the playbooks) and populate with the following variables and insert your values:
+
+```
+az_subs_id: "<--your-id-here-->"
+az_client_id: "<--your-id-here-->"
+az_secret: "<--your-secret-here-->"
+az_tenant: "<--your-tenant-here-->"
+```
+
+You will also need a file named big_creds.yaml (and update path in the 'vars_files' section of the playbooks) with the following variables (if you have already run the AWS playbook, this file might already exist, and contain bigip_user/pass variables used for AWS):
+
+```
+bigip_azure_user: "--your-username-here--"
+bigip_azure_pass: "--your-password-here--"
+```
