@@ -24,9 +24,7 @@
 
 ## How to run...
 
-These playbooks require Ansible 2.8.1.
-
-If you have ansible installed, you can run the playbooks with: 
+These playbooks require Ansible 2.8.1.  If you have ansible installed, you can run the playbooks with: 
  
  ```ansible-playbook playbook-name```
 
@@ -57,7 +55,7 @@ The AWS & Azure Ansible modules require the following Python packages to be inst
 To allow Ansible to SSH to hosts (especially for BIG-IPs in AWS, in order to change initial password and enable password authentication), you will need an SSH key pair... and you might need to disable host_key_checking in the Ansible config file:
 
  - create an SSH key pair in PEM format (or use your existing key pair e.g. ~/.ssh/id_rsa[.pub])
- - create ansible.cfg (if it doesn't exist) and add the following four lines (substituting <key file name> with your key file):
+ - create ansible.cfg (if it doesn't exist) and add the following four lines (substituting <key file name> with your SSH key file path/name):
 
 ```
 [defaults]
@@ -87,7 +85,7 @@ bigip_pass: "--your-password-here--"
 ```
 
 ### IMPORTANT!!  
-Make sure your creds files are not in ANY of your git repo folders
+Make sure your creds files are not in ANY of your git repo folders.
 In my example, I have the following directory structure.  You can see that the creds file resides outside of my git repo (the values are also encrypted with ansible vault):
 
 ```bash
