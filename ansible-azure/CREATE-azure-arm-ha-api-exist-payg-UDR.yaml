@@ -88,7 +88,7 @@
         adminPasswordOrKey:
           value: "{{ bigip_azure_pass }}"
         dnsLabel:
-          value: arch-f5
+          value: "{{ uk_se_name }}"
         instanceName:
           value: big-ip
         instanceType:
