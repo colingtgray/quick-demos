@@ -84,6 +84,9 @@ bigip_user: "--your-username-here--"
 bigip_pass: "--your-password-here--"
 ```
 
+And, in EC2, you will need to go to 'Key Pairs' and 'Import Key Pair', in each region you want to use.  That is to say, import the 'public' half of the PEM format SSH Key Pair you referenced in the Ansible Prerequisites section above:
+
+
 ### IMPORTANT!!  
 Make sure your creds files are not in ANY of your git repo folders.
 In my example, I have the following directory structure.  You can see that the creds file resides outside of my git repo (the values are also encrypted with ansible vault):
