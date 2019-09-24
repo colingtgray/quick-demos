@@ -96,7 +96,7 @@
         imageName:
           value: Best25Mbps
         bigIpVersion:
-          value: 13.1.100000
+          value: latest
         numberOfAdditionalNics:
           value: 0
         additionalNicLocation:
