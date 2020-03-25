@@ -16,11 +16,11 @@
     uk_se_name: col
     stack_name: "{{ uk_se_name }}-ansible-pan-demo-build"
     
-    aws_region: eu-west-2
+    aws_region: eu-west-1
     subnet_start: "10.1"
 
-    sshKey: "EUPar"
-    ssh_key_file_path: "~/.ssh/EUPar.pem"
+    sshKey: "EUIre"
+    ssh_key_file_path: "~/.ssh/EUIre.pem"
 #    
 #------------------------------------------------------------------------------
 #
