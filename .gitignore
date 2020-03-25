@@ -10,3 +10,5 @@
 
 # Ansible retry files
 *.retry
+
+*creds*
