@@ -2,7 +2,9 @@
  
  ## Overview
 
- These playbooks are provided to spin up a quick demo environment up in Azure or AWS, and also to easily destroy the demo when done.  The configuration builds and destroys the following:
+ These playbooks are from https://github.com/s-archer
+ 
+ ...they are provided to spin up a quick demo environment up in Azure or AWS, and also to easily destroy the demo when done.  The configuration builds and destroys the following:
 
  - VNET or VPC
  - Subnets (Management and Dataplane)
@@ -12,14 +14,6 @@
 
  In *AWS*, the playbook will login to the deployed BIG-IPs and change/enable password authentication.  
  In *Azure*, passwords are enabled by default.
-
- What these playbooks don't provide (yet):
-
- - Any test application server (I plan to automate a microservices app)
- - AS3 configuration to create a virtual server and pool (works in my ansible-aws-with-peering-and-gslb playbook)
- - Automated TLS certs/keys
- - F5 Cloud Services GSLBaaS (works in my ansible-aws-with-peering-and-gslb playbook playbook)
- - F5 Silverline WAFaaS
 
 
 ## How to run...
