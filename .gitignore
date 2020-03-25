@@ -12,3 +12,4 @@
 *.retry
 
 *creds*
+*code-workspace
