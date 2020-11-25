@@ -13,8 +13,8 @@
 # don't update them, I'll be usung the same tags and might delete your deployment.
 # Finally, do not use spaces or unusual characters in the variable values!
 #
-    uk_se_name: arch
-    stack_name: ansible-f5-demo-build
+    uk_se_name: col
+    stack_name: ansible-pan-demo-build
 
     az_region: ukwest
     #az_region: eastus

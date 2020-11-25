@@ -1,0 +1,84 @@
+---
+#------------------------------------------------------------------------------
+# Playbook to CREATE Azure demo environment. 
+#------------------------------------------------------------------------------
+
+- name: PROVISION VNET SUBNETS & F5 INSTANCES
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  
+
+  environment:
+    AZURE_SUBSCRIPTION_ID: "{{ subscription_id }}"
+    AZURE_CLIENT_ID: "{{ application_client_id }}"
+    AZURE_SECRET: "{{ az_secret }}"
+    AZURE_TENANT: "{{ az_tenant }}"
+
+#------------------------------------------------------------------------------
+# Load Variables from files 
+#------------------------------------------------------------------------------
+
+
+  vars_files:
+    - ../creds/azure_creds.yaml
+    - ./vars.yaml
+     
+
+#------------------------------------------------------------------------------
+# Start Tasks
+#------------------------------------------------------------------------------
+
+  tasks:
+
+
+  - name: CREATE RESOURCE GROUP
+    azure_rm_resourcegroup:
+      name: "{{ rg_name }}"
+      location: "{{ az_region }}"
+      tags:
+        automated: "{{ automation_tool }}"
+        stack: "{{ stack_name }}"
+        UK-SE: "{{ uk_se_name }}"
+
+
+  - name: CREATE VNET
+    azure_rm_virtualnetwork:
+      name: "{{ vnet_name }}"
+      resource_group: "{{ rg_name }}"
+      address_prefixes_cidr:
+          - "{{ vnet_cidr }}"
+      tags:
+        automated: "{{ automation_tool }}"
+        stack: "{{ stack_name }}"
+        UK-SE: "{{ uk_se_name }}"
+
+
+  - name: CREATE SUBNET
+    azure_rm_subnet:
+      name: "{{ item.name }}"
+      virtual_network_name: "{{ vnet_name }}"
+      resource_group: "{{ rg_name }}"
+      address_prefix_cidr: "{{ item.cidr }}"
+    with_items: "{{ vnet_subnets }}"
+    register: create_vnet_subnets
+
+
+ 
+
+
+  - name: OUTPUT WARNING ABOUT KNOW ISSUE WITH ADDTLNIC
+    debug:
+      msg: "The previous error referring to missing addtlnic is cosmetic.  F5 ARM templates need to use dependsOn for conditional resources, so unable to work-around the issue.  We can safely igmore and the BIG-IP devices deploy correctly."
+
+
+#------------------------------------------------------------------------------
+# TS Curl
+#------------------------------------------------------------------------------
+
+#curl -kvu $CREDS "https://$IP/mgmt/shared/iapp/package-management-tasks" -H "Origin: https://$IP" -H 'Content-Type: application/json;charset=UTF-8' --data $DATA
+
+#------------------------------------------------------------------------------
+# End
+#------------------------------------------------------------------------------
+...
